@@ -69,7 +69,7 @@ export default function Dashboard() {
   const catMood = totalIncome > totalExpense ? 'happy' : totalExpense > 0 ? 'worried' : 'sleep'
 
   return (
-    <div className="space-y-4 pb-20">
+    <div className="space-y-4 pb-4">
       {/* Period navigation */}
       <div className="flex items-center justify-between">
         <Button variant="ghost" size="icon" onClick={() => setPeriod(p => getPrevPeriod(p, settings.monthStartDay))}>
@@ -200,14 +200,14 @@ export default function Dashboard() {
           </CardHeader>
           <CardContent>
             <div className="flex items-center gap-4">
-              <ResponsiveContainer width="50%" height={160}>
+              <ResponsiveContainer width="40%" height={160}>
                 <PieChart>
                   <Pie
                     data={categoryData}
                     cx="50%"
                     cy="50%"
-                    innerRadius={35}
-                    outerRadius={65}
+                    innerRadius={25}
+                    outerRadius={50}
                     paddingAngle={3}
                     dataKey="value"
                   >

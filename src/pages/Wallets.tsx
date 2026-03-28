@@ -25,18 +25,20 @@ const WALLET_COLORS = [
 ]
 
 export default function Wallets() {
-  const { wallets, addWallet, updateWallet, deleteWallet, transactions } = useStore()
+  const { wallets, addWallet, updateWallet, deleteWallet, transactions, categories, addTransaction } = useStore()
   const [showForm, setShowForm] = useState(false)
   const [editWallet, setEditWallet] = useState<Wallet | null>(null)
   const [deleteTarget, setDeleteTarget] = useState<Wallet | null>(null)
   const [name, setName] = useState('')
   const [type, setType] = useState<Wallet['type']>('cash')
   const [color, setColor] = useState(WALLET_COLORS[0])
+  const [balanceInput, setBalanceInput] = useState('')
 
   const resetForm = () => {
     setName('')
     setType('cash')
     setColor(WALLET_COLORS[0])
+    setBalanceInput('')
     setEditWallet(null)
   }
 
@@ -50,6 +52,7 @@ export default function Wallets() {
     setName(wallet.name)
     setType(wallet.type)
     setColor(wallet.color || WALLET_COLORS[0])
+    setBalanceInput(wallet.balance.toString())
     setShowForm(true)
   }
 
@@ -57,6 +60,21 @@ export default function Wallets() {
     if (!name.trim()) return
     if (editWallet) {
       updateWallet(editWallet.id, { name, type, color })
+      const newBalance = parseFloat(balanceInput.replace(/[^0-9.-]/g, '')) || 0
+      const diff = newBalance - editWallet.balance
+      if (diff !== 0) {
+        const txType = diff > 0 ? 'income' : 'expense'
+        const adjustCat = categories.find(c => c.type === txType && c.name === 'Lainnya')
+        addTransaction({
+          type: txType,
+          amount: Math.abs(diff),
+          name: 'Penyesuaian Saldo',
+          date: new Date().toISOString().split('T')[0],
+          category: adjustCat?.id ?? (diff > 0 ? 'cat-other-income' : 'cat-other-expense'),
+          description: `Penyesuaian saldo dompet ${name}`,
+          walletId: editWallet.id,
+        })
+      }
     } else {
       addWallet({ name, type, balance: 0, color })
     }
@@ -75,8 +93,15 @@ export default function Wallets() {
 
   const totalBalance = wallets.reduce((s, w) => s + w.balance, 0)
 
+  const getWalletStats = (walletId: string) => {
+    const txs = transactions.filter(t => t.walletId === walletId)
+    const income = txs.filter(t => t.type === 'income').reduce((s, t) => s + t.amount, 0)
+    const expense = txs.filter(t => t.type === 'expense').reduce((s, t) => s + t.amount, 0)
+    return { income, expense }
+  }
+
   return (
-    <div className="space-y-4 pb-20">
+    <div className="space-y-4 pb-4">
       <div className="flex items-center justify-between">
         <h2 className="text-lg font-semibold text-brown-950 dark:text-brown-100 flex items-center gap-2">
           <WalletIcon className="h-5 w-5 text-brown-400" />
@@ -119,6 +144,21 @@ export default function Wallets() {
                   <p className={`text-lg font-bold ${wallet.balance >= 0 ? 'text-green-600' : 'text-red-600'}`}>
                     {formatCurrency(wallet.balance)}
                   </p>
+                  {/* Income/expense differentiation */}
+                  {(() => {
+                    const stats = getWalletStats(wallet.id)
+                    if (stats.income === 0 && stats.expense === 0) return null
+                    return (
+                      <div className="flex gap-2 mt-1 justify-end">
+                        {stats.income > 0 && (
+                          <span className="text-[10px] text-green-600 font-medium">↑ {formatCurrency(stats.income)}</span>
+                        )}
+                        {stats.expense > 0 && (
+                          <span className="text-[10px] text-red-500 font-medium">↓ {formatCurrency(stats.expense)}</span>
+                        )}
+                      </div>
+                    )
+                  })()}
                   <div className="flex gap-1 mt-1 place-content-end">
                     <button onClick={() => openEdit(wallet)} className="p-2.5 rounded-xl active:bg-brown-100 dark:active:bg-brown-800/40">
                       <Pencil className="h-4 w-4 text-brown-400" />
@@ -142,7 +182,15 @@ export default function Wallets() {
       )}
 
       {/* Add/Edit Dialog */}
-      <Dialog open={showForm} onClose={() => setShowForm(false)}>
+      <Dialog
+        open={showForm}
+        onClose={() => setShowForm(false)}
+        footer={
+          <Button onClick={handleSave} className="w-full h-12" disabled={!name.trim()}>
+            {editWallet ? 'Simpan Perubahan 🐾' : 'Tambah Dompet 🐾'}
+          </Button>
+        }
+      >
         <DialogTitle>{editWallet ? 'Edit Dompet' : 'Tambah Dompet'} 🐱</DialogTitle>
         <div className="space-y-4">
           <div>
@@ -153,6 +201,28 @@ export default function Wallets() {
               onChange={e => setName(e.target.value)}
             />
           </div>
+          {editWallet && (
+            <div>
+              <label className="text-xs font-medium text-brown-700 mb-1 block">Saldo Dompet</label>
+              <Input
+                type="number"
+                inputMode="numeric"
+                placeholder="0"
+                value={balanceInput}
+                onChange={e => setBalanceInput(e.target.value)}
+              />
+              {(() => {
+                const newBal = parseFloat(balanceInput.replace(/[^0-9.-]/g, '')) || 0
+                const diff = newBal - editWallet.balance
+                if (diff === 0) return null
+                return (
+                  <p className={`text-xs mt-1 ${diff > 0 ? 'text-green-600' : 'text-red-500'}`}>
+                    {diff > 0 ? '↑' : '↓'} Selisih {formatCurrency(Math.abs(diff))} — transaksi penyesuaian akan dibuat
+                  </p>
+                )
+              })()}
+            </div>
+          )}
           <div>
             <label className="text-xs font-medium text-brown-700 mb-1 block">Tipe</label>
             <Select
@@ -181,9 +251,7 @@ export default function Wallets() {
               ))}
             </div>
           </div>
-          <Button onClick={handleSave} className="w-full" disabled={!name.trim()}>
-            {editWallet ? 'Simpan Perubahan' : 'Tambah Dompet'} 🐾
-          </Button>
+
         </div>
       </Dialog>
 

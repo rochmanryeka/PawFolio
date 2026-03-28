@@ -35,7 +35,7 @@ export function PawFolioLogoFull({ size = 32, className = '' }: PawFolioLogoProp
           className="text-brown-400 dark:text-brown-400 font-normal"
           style={{ fontSize: size * 0.26, lineHeight: 1.3 }}
         >
-          Keuangan Kucing Anda
+          Keuangan menyenangkan pribadimu
         </span>
       </div>
     </div>

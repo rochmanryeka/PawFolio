@@ -16,28 +16,37 @@ export async function parseTransactionWithAI(
 ): Promise<ParsedTransaction | null> {
   if (!apiKey) return null
 
-  const categoryList = categories.map(c => `${c.name} (${c.type})`).join(', ')
+  const incomeCategories = categories.filter(c => c.type === 'income').map(c => c.name)
+  const expenseCategories = categories.filter(c => c.type === 'expense').map(c => c.name)
   const today = new Date().toISOString().split('T')[0]
 
   const prompt = `You are a financial transaction parser. Parse the following natural language input into a structured transaction.
 
-Available categories: ${categoryList}
+Income categories (use EXACTLY one of these names if income): ${incomeCategories.join(', ')}
+Expense categories (use EXACTLY one of these names if expense): ${expenseCategories.join(', ')}
 
 Today's date: ${today}
 
 Rules:
 - Determine if it's income or expense from context
-- Extract the amount (number only)
-- Extract a short name/title
-- Determine the best matching category from the list
-- Extract date if mentioned, otherwise use today
+- Extract the amount (number only, no currency symbols)
+- Extract a short name/title for the transaction
+- Choose the BEST matching category from the list above — use the EXACT name, do not invent new categories
+- Extract date if mentioned (format: YYYY-MM-DD), otherwise use today
 - Extract description if any additional details exist
-- Return ONLY valid JSON, no other text
+- Return ONLY valid JSON, no markdown, no extra text
+- name always captialized first letter, category must match exactly from list, date in YYYY-MM-DD format, amount as full integer (no decimals)
+
+- Currency Normalization: 
+  - If the input uses "rb", "k", or "ribu", multiply the number by 1,000 (e.g., 50rb = 50000).
+  - If the input uses "jt" or "juta", multiply the number by 1,000,000 (e.g., 1.5jt = 1500000).
+  - Remove all dots (.) used as thousand separators and replace commas (,) with dots for decimals if necessary.
+  - The final "amount" must be the full integer value.
 
 Input: "${input}"
 
-Return JSON format:
-{"type": "income|expense", "amount": number, "name": "string", "date": "YYYY-MM-DD", "category": "category name", "description": "optional string or null"}`
+Return JSON:
+{"type": "income|expense", "amount": number, "name": "string", "date": "YYYY-MM-DD", "category": "exact category name from list", "description": "optional string or null"}`
 
   try {
     const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
