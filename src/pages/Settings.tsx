@@ -29,7 +29,7 @@ export default function Settings() {
   }
 
   return (
-    <div className="space-y-4 pb-20">
+    <div className="space-y-4 pb-4">
       <h2 className="text-lg font-semibold text-brown-950 dark:text-brown-100 flex items-center gap-2">
         <SettingsIcon className="h-5 w-5 text-brown-400" />
         Pengaturan
@@ -155,7 +155,7 @@ export default function Settings() {
               {categories.filter(c => c.type === 'income').map(cat => (
                 <div key={cat.id} className="flex items-center justify-between text-sm p-2 rounded-lg bg-green-50/50">
                   <span className="text-brown-950 dark:text-brown-100">{cat.icon} {cat.name}</span>
-                  <button onClick={() => deleteCategory(cat.id)} className="text-red-400 hover:text-red-600 text-xs">✕</button>
+                  <button onClick={() => deleteCategory(cat.id)} className="text-red-500 p-2 -mr-1 rounded-lg active:bg-red-50">✕</button>
                 </div>
               ))}
 
@@ -163,7 +163,7 @@ export default function Settings() {
               {categories.filter(c => c.type === 'expense').map(cat => (
                 <div key={cat.id} className="flex items-center justify-between text-sm p-2 rounded-lg bg-red-50/50">
                   <span className="text-brown-950 dark:text-brown-100">{cat.icon} {cat.name}</span>
-                  <button onClick={() => deleteCategory(cat.id)} className="text-red-400 hover:text-red-600 text-xs">✕</button>
+                  <button onClick={() => deleteCategory(cat.id)} className="text-red-500 p-2 -mr-1 rounded-lg active:bg-red-50">✕</button>
                 </div>
               ))}
             </div>

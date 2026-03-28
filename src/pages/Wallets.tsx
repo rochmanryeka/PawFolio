@@ -100,7 +100,7 @@ export default function Wallets() {
       {/* Wallet list */}
       <div className="space-y-3">
         {wallets.map(wallet => (
-          <Card key={wallet.id} className="group">
+          <Card key={wallet.id}>
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
@@ -119,12 +119,12 @@ export default function Wallets() {
                   <p className={`text-lg font-bold ${wallet.balance >= 0 ? 'text-green-600' : 'text-red-600'}`}>
                     {formatCurrency(wallet.balance)}
                   </p>
-                  <div className="flex gap-1 mt-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <button onClick={() => openEdit(wallet)} className="p-1 rounded-lg hover:bg-brown-100 dark:hover:bg-brown-800/40">
-                      <Pencil className="h-3.5 w-3.5 text-brown-400" />
+                  <div className="flex gap-1 mt-1 place-content-end">
+                    <button onClick={() => openEdit(wallet)} className="p-2.5 rounded-xl active:bg-brown-100 dark:active:bg-brown-800/40">
+                      <Pencil className="h-4 w-4 text-brown-400" />
                     </button>
-                    <button onClick={() => handleDelete(wallet)} className="p-1 rounded-lg hover:bg-red-50">
-                      <Trash2 className="h-3.5 w-3.5 text-red-400" />
+                    <button onClick={() => handleDelete(wallet)} className="p-2.5 rounded-xl active:bg-red-50">
+                      <Trash2 className="h-4 w-4 text-red-400" />
                     </button>
                   </div>
                 </div>
@@ -174,7 +174,7 @@ export default function Wallets() {
                   key={c}
                   onClick={() => setColor(c)}
                   className={`w-8 h-8 rounded-full transition-all ${
-                    color === c ? 'ring-2 ring-offset-2 ring-brown-500 scale-110' : 'hover:scale-105'
+                    color === c ? 'ring-2 ring-offset-2 ring-brown-500 scale-110' : 'active:scale-105'
                   }`}
                   style={{ backgroundColor: c }}
                 />

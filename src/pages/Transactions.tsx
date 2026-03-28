@@ -165,7 +165,7 @@ export default function Transactions() {
                 {txs.map(tx => {
                   const wallet = wallets.find(w => w.id === tx.walletId)
                   return (
-                    <Card key={tx.id} className="group">
+                    <Card key={tx.id}>
                       <CardContent className="p-3">
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-3 flex-1 min-w-0">
@@ -192,7 +192,7 @@ export default function Transactions() {
                               )}
                             </div>
                           </div>
-                          <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-1">
                             <span className={`text-sm font-semibold whitespace-nowrap ${
                               tx.type === 'income' ? 'text-green-600' : 'text-red-600'
                             }`}>
@@ -200,9 +200,9 @@ export default function Transactions() {
                             </span>
                             <button
                               onClick={() => handleDelete(tx)}
-                              className="opacity-0 group-hover:opacity-100 p-1 rounded-lg hover:bg-red-50 transition-all"
+                              className="p-2.5 rounded-xl active:bg-red-50 transition-all -mr-1.5"
                             >
-                              <Trash2 className="h-3.5 w-3.5 text-red-400" />
+                              <Trash2 className="h-4 w-4 text-red-300" />
                             </button>
                           </div>
                         </div>
@@ -219,13 +219,28 @@ export default function Transactions() {
       {/* FAB */}
       <button
         onClick={() => { resetForm(); setShowForm(true) }}
-        className="fixed bottom-24 right-5 w-14 h-14 bg-linear-to-br from-brown-700 to-brown-400 text-white rounded-2xl shadow-lg flex items-center justify-center hover:shadow-xl transition-all active:scale-90 z-40"
+        className="fixed bottom-24 right-5 w-14 h-14 bg-linear-to-br from-brown-700 to-brown-400 text-white rounded-2xl shadow-lg flex items-center justify-center active:scale-90 active:shadow-sm transition-all z-40"
       >
         <Plus className="h-6 w-6" />
       </button>
 
       {/* Add Transaction Dialog */}
-      <Dialog open={showForm} onClose={() => setShowForm(false)}>
+      <Dialog
+        open={showForm}
+        onClose={() => setShowForm(false)}
+        footer={
+          aiMode ? (
+            <Button onClick={handleAIParse} disabled={aiLoading || !aiInput.trim()} className="w-full h-12 gap-2">
+              <Sparkles className="h-4 w-4" />
+              {aiLoading ? 'Memproses...' : 'Parse dengan AI 🐱'}
+            </Button>
+          ) : (
+            <Button onClick={handleSubmit} className="w-full h-12" disabled={!formAmount || !formName}>
+              Simpan Transaksi 🐾
+            </Button>
+          )
+        }
+      >
         <DialogTitle>
           <div className="flex items-center gap-2">
             <CatPaw size={24} className="text-brown-400" />
@@ -256,10 +271,6 @@ export default function Transactions() {
               onChange={e => setAiInput(e.target.value)}
               rows={3}
             />
-            <Button onClick={handleAIParse} disabled={aiLoading || !aiInput.trim()} className="w-full gap-2">
-              <Sparkles className="h-4 w-4" />
-              {aiLoading ? 'Memproses...' : 'Parse dengan AI 🐱'}
-            </Button>
           </div>
         ) : (
           <div className="space-y-3">
@@ -334,10 +345,6 @@ export default function Transactions() {
                 onChange={e => setFormDescription(e.target.value)}
               />
             </div>
-
-            <Button onClick={handleSubmit} className="w-full" disabled={!formAmount || !formName}>
-              Simpan Transaksi 🐾
-            </Button>
           </div>
         )}
       </Dialog>

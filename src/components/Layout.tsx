@@ -101,10 +101,10 @@ export default function Layout() {
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
                 className={cn(
-                  "flex-1 flex flex-col items-center gap-0.5 py-2 px-1 transition-all duration-200 relative",
+                  "flex-1 flex flex-col items-center gap-0.5 py-3 px-1 transition-all duration-200 relative",
                   isActive
                     ? "text-brown-700 dark:text-brown-400"
-                    : "text-brown-300 dark:text-brown-600 hover:text-brown-500 dark:hover:text-brown-400"
+                    : "text-brown-300 dark:text-brown-600"
                 )}
               >
                 <Icon className={cn("h-5 w-5 transition-transform", isActive && "scale-110")} />

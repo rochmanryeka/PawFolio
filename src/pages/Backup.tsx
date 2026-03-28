@@ -188,7 +188,7 @@ export default function Backup() {
                       </button>
                       <button
                         onClick={() => setDeleteTarget(backup)}
-                        className="p-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/30 transition-colors opacity-0 group-hover:opacity-100"
+                        className="p-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/30 transition-colors"
                         title="Hapus"
                       >
                         <Trash2 className="h-4 w-4 text-red-400" />

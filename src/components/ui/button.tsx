@@ -17,10 +17,10 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       link:        "text-brown-700 dark:text-brown-400 underline-offset-4 hover:underline",
     }
     const sizes = {
-      default: "h-10 px-4 py-2",
-      sm:      "h-8 px-3 text-sm",
-      lg:      "h-12 px-6 text-lg",
-      icon:    "h-10 w-10",
+      default: "h-11 px-4 py-2",
+      sm:      "h-9 px-3 text-sm",
+      lg:      "h-13 px-6 text-lg",
+      icon:    "h-11 w-11",
     }
     return (
       <button
