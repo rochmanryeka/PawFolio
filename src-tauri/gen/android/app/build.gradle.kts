@@ -24,6 +24,17 @@ android {
         versionCode = tauriProperties.getProperty("tauri.android.versionCode", "1").toInt()
         versionName = tauriProperties.getProperty("tauri.android.versionName", "1.0")
     }
+    signingConfigs {
+        create("release") {
+            val keystorePath = System.getenv("ANDROID_SIGNING_STORE_PATH")
+                ?: file("../../../../android-signing/pawfolio-release.keystore").absolutePath
+            storeFile = file(keystorePath)
+            storePassword = System.getenv("ANDROID_SIGNING_STORE_PASSWORD") ?: "secret123"
+            keyAlias = System.getenv("ANDROID_SIGNING_KEY_ALIAS") ?: "pawfolio"
+            keyPassword = System.getenv("ANDROID_SIGNING_KEY_PASSWORD") ?: "secret123"
+        }
+    }
+
     buildTypes {
         getByName("debug") {
             manifestPlaceholders["usesCleartextTraffic"] = "true"
@@ -38,6 +49,7 @@ android {
         }
         getByName("release") {
             isMinifyEnabled = true
+            signingConfig = signingConfigs.getByName("release")
             proguardFiles(
                 *fileTree(".") { include("**/*.pro") }
                     .plus(getDefaultProguardFile("proguard-android-optimize.txt"))

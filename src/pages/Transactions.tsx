@@ -8,6 +8,8 @@ import { Textarea } from '@/components/ui/textarea'
 import { Tabs } from '@/components/ui/tabs'
 import { Badge } from '@/components/ui/badge'
 import { Dialog, DialogTitle } from '@/components/ui/dialog'
+import { ConfirmDialog } from '@/components/ui/confirm-dialog'
+import { toast } from '@/components/ui/toast'
 import { CatPaw, CatSleep } from '@/components/cat-icons'
 import { formatCurrency } from '@/lib/utils'
 import { getMonthPeriod, getNextPeriod, getPrevPeriod, isInPeriod, formatDate } from '@/lib/date-utils'
@@ -24,6 +26,7 @@ export default function Transactions() {
   const [aiMode, setAiMode] = useState(false)
   const [aiInput, setAiInput] = useState('')
   const [aiLoading, setAiLoading] = useState(false)
+  const [deleteTarget, setDeleteTarget] = useState<Transaction | null>(null)
 
   // Form state
   const [formType, setFormType] = useState<TransactionType>('expense')
@@ -98,9 +101,7 @@ export default function Transactions() {
   }
 
   const handleDelete = (tx: Transaction) => {
-    if (confirm(`Hapus transaksi "${tx.name}"?`)) {
-      deleteTransaction(tx.id)
-    }
+    setDeleteTarget(tx)
   }
 
   const groupedByDate = useMemo(() => {
@@ -120,7 +121,7 @@ export default function Transactions() {
         <Button variant="ghost" size="icon" onClick={() => setPeriod(p => getPrevPeriod(p, settings.monthStartDay))}>
           <ChevronLeft className="h-5 w-5" />
         </Button>
-        <h2 className="text-lg font-semibold text-purple-800 capitalize">{period.label}</h2>
+        <h2 className="text-lg font-semibold text-brown-950 dark:text-brown-100 capitalize">{period.label}</h2>
         <Button variant="ghost" size="icon" onClick={() => setPeriod(p => getNextPeriod(p, settings.monthStartDay))}>
           <ChevronRight className="h-5 w-5" />
         </Button>
@@ -139,7 +140,7 @@ export default function Transactions() {
 
       {/* Search */}
       <div className="relative">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-purple-300" />
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-brown-300" />
         <Input
           placeholder="Cari transaksi... 🐱"
           value={searchQuery}
@@ -151,15 +152,15 @@ export default function Transactions() {
       {/* Transaction list grouped by date */}
       {groupedByDate.length === 0 ? (
         <div className="text-center py-12">
-          <CatSleep size={64} className="mx-auto text-purple-300 mb-3" />
-          <p className="text-purple-400">Belum ada transaksi</p>
-          <p className="text-xs text-purple-300 mt-1">Ketuk + untuk menambah</p>
+          <CatSleep size={64} className="mx-auto text-brown-300 mb-3" />
+          <p className="text-brown-400">Belum ada transaksi</p>
+          <p className="text-xs text-brown-300 mt-1">Ketuk + untuk menambah</p>
         </div>
       ) : (
         <div className="space-y-4">
           {groupedByDate.map(([date, txs]) => (
             <div key={date}>
-              <p className="text-xs font-medium text-purple-400 mb-2 px-1">{formatDate(date)}</p>
+              <p className="text-xs font-medium text-brown-400 mb-2 px-1">{formatDate(date)}</p>
               <div className="space-y-2">
                 {txs.map(tx => {
                   const wallet = wallets.find(w => w.id === tx.walletId)
@@ -176,18 +177,18 @@ export default function Transactions() {
                               {categories.find(c => c.name === tx.category)?.icon || (tx.type === 'income' ? '💰' : '💸')}
                             </div>
                             <div className="min-w-0">
-                              <p className="text-sm font-medium text-purple-900 truncate">{tx.name}</p>
-                              <div className="flex items-center gap-1.5">
-                                <span className="text-xs text-purple-400">{tx.category}</span>
-                                {wallet && (
-                                  <>
-                                    <span className="text-xs text-purple-200">·</span>
-                                    <span className="text-xs text-purple-400">{wallet.name}</span>
-                                  </>
-                                )}
-                              </div>
-                              {tx.description && (
-                                <p className="text-xs text-purple-300 truncate">{tx.description}</p>
+                            <p className="text-sm font-medium text-brown-950 dark:text-brown-100 truncate">{tx.name}</p>
+                            <div className="flex items-center gap-1.5">
+                              <span className="text-xs text-brown-400">{tx.category}</span>
+                              {wallet && (
+                                <>
+                                  <span className="text-xs text-brown-200">·</span>
+                                  <span className="text-xs text-brown-400">{wallet.name}</span>
+                                </>
+                              )}
+                            </div>
+                            {tx.description && (
+                              <p className="text-xs text-brown-300 truncate">{tx.description}</p>
                               )}
                             </div>
                           </div>
@@ -218,7 +219,7 @@ export default function Transactions() {
       {/* FAB */}
       <button
         onClick={() => { resetForm(); setShowForm(true) }}
-        className="fixed bottom-24 right-5 w-14 h-14 bg-gradient-to-br from-purple-500 to-pink-500 text-white rounded-2xl shadow-lg flex items-center justify-center hover:shadow-xl transition-all active:scale-90 z-40"
+        className="fixed bottom-24 right-5 w-14 h-14 bg-linear-to-br from-brown-700 to-brown-400 text-white rounded-2xl shadow-lg flex items-center justify-center hover:shadow-xl transition-all active:scale-90 z-40"
       >
         <Plus className="h-6 w-6" />
       </button>
@@ -227,7 +228,7 @@ export default function Transactions() {
       <Dialog open={showForm} onClose={() => setShowForm(false)}>
         <DialogTitle>
           <div className="flex items-center gap-2">
-            <CatPaw size={24} className="text-purple-500" />
+            <CatPaw size={24} className="text-brown-400" />
             Tambah Transaksi
           </div>
         </DialogTitle>
@@ -273,7 +274,7 @@ export default function Transactions() {
             />
 
             <div>
-              <label className="text-xs font-medium text-purple-600 mb-1 block">Nama</label>
+              <label className="text-xs font-medium text-brown-700 mb-1 block">Nama</label>
               <Input
                 placeholder="Nama transaksi"
                 value={formName}
@@ -282,7 +283,7 @@ export default function Transactions() {
             </div>
 
             <div>
-              <label className="text-xs font-medium text-purple-600 mb-1 block">Nominal</label>
+              <label className="text-xs font-medium text-brown-700 mb-1 block">Nominal</label>
               <Input
                 type="number"
                 placeholder="0"
@@ -293,7 +294,7 @@ export default function Transactions() {
 
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="text-xs font-medium text-purple-600 mb-1 block">Tanggal</label>
+                <label className="text-xs font-medium text-brown-700 mb-1 block">Tanggal</label>
                 <Input
                   type="date"
                   value={formDate}
@@ -301,7 +302,7 @@ export default function Transactions() {
                 />
               </div>
               <div>
-                <label className="text-xs font-medium text-purple-600 mb-1 block">Kategori</label>
+                <label className="text-xs font-medium text-brown-700 mb-1 block">Kategori</label>
                 <Select
                   value={formCategory}
                   onChange={e => setFormCategory(e.target.value)}
@@ -314,7 +315,7 @@ export default function Transactions() {
             </div>
 
             <div>
-              <label className="text-xs font-medium text-purple-600 mb-1 block">Dompet</label>
+              <label className="text-xs font-medium text-brown-700 mb-1 block">Dompet</label>
               <Select
                 value={formWallet}
                 onChange={e => setFormWallet(e.target.value)}
@@ -326,7 +327,7 @@ export default function Transactions() {
             </div>
 
             <div>
-              <label className="text-xs font-medium text-purple-600 mb-1 block">Keterangan (opsional)</label>
+              <label className="text-xs font-medium text-brown-700 mb-1 block">Keterangan (opsional)</label>
               <Input
                 placeholder="Detail tambahan..."
                 value={formDescription}
@@ -340,6 +341,16 @@ export default function Transactions() {
           </div>
         )}
       </Dialog>
+
+      {/* Delete Confirmation */}
+      <ConfirmDialog
+        open={!!deleteTarget}
+        title="Hapus Transaksi"
+        message={`Hapus "${deleteTarget?.name}"?`}
+        confirmLabel="Hapus"
+        onConfirm={() => { if (deleteTarget) deleteTransaction(deleteTarget.id); setDeleteTarget(null) }}
+        onCancel={() => setDeleteTarget(null)}
+      />
     </div>
   )
 }

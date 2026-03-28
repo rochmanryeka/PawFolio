@@ -1,6 +1,6 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
-  "productName": "FinFlow",
+  "productName": "PawFolio",
   "version": "1.0.0",
   "identifier": "com.finflow.app",
   "build": {
@@ -12,7 +12,7 @@
   "app": {
     "windows": [
       {
-        "title": "FinFlow 🐱",
+        "title": "PawFolio 🐾",
         "width": 420,
         "height": 800,
         "resizable": true,

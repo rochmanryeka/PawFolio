@@ -41,6 +41,7 @@ const defaultSettings: AppSettings = {
   monthStartDay: 1,
   currency: 'IDR',
   autoBackup: true,
+  darkMode: false,
 }
 
 const defaultWallets: Wallet[] = [

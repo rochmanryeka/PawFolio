@@ -34,6 +34,7 @@ export interface AppSettings {
   currency: string
   autoBackup: boolean
   lastBackupDate?: string
+  darkMode: boolean
 }
 
 export interface BackupData {

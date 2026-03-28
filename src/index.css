@@ -1,9 +1,40 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ── Brown / Warm Earth Palette ─────────────────────────── */
+@theme {
+  --color-brown-950: #291C0E;
+  --color-brown-800: #3d2415;
+  --color-brown-700: #6E473B;
+  --color-brown-500: #8a6052;
+  --color-brown-400: #A78D78;
+  --color-brown-300: #BEB5A9;
+  --color-brown-200: #D4C8BC;
+  --color-brown-100: #E1D4C2;
+  --color-brown-50:  #F5EDE2;
+  --color-cream:     #FAF6F0;
+}
+
 @layer base {
   :root {
-    --background: #faf5ff;
-    --foreground: #1a1a2e;
+    --background: #F5EDE2;
+    --foreground: #291C0E;
+    --card-bg: #FAF6F0;
+    --card-border: #D4C8BC;
+    --input-bg: #FAF6F0;
+    --nav-bg: rgba(245, 237, 226, 0.94);
+    --header-bg: rgba(245, 237, 226, 0.88);
+  }
+
+  .dark {
+    --background: #1a0e07;
+    --foreground: #E1D4C2;
+    --card-bg: rgba(41, 28, 14, 0.95);
+    --card-border: #4a2e1e;
+    --input-bg: #291C0E;
+    --nav-bg: rgba(26, 14, 7, 0.96);
+    --header-bg: rgba(26, 14, 7, 0.92);
   }
 
   * {
@@ -21,22 +52,15 @@
     overscroll-behavior: none;
     -webkit-tap-highlight-color: transparent;
     user-select: none;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
   }
 
-  ::-webkit-scrollbar {
-    width: 4px;
-  }
-  ::-webkit-scrollbar-track {
-    background: transparent;
-  }
-  ::-webkit-scrollbar-thumb {
-    background: #d8b4fe;
-    border-radius: 999px;
-  }
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: #BEB5A9; border-radius: 999px; }
 
-  input, select, textarea {
-    user-select: auto;
-  }
+  input, select, textarea { user-select: auto; }
 }
 
 @layer utilities {

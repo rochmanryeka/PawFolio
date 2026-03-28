@@ -12,7 +12,7 @@ import {
   PieChart, Pie, Cell, BarChart, Bar,
 } from 'recharts'
 
-const COLORS = ['#a78bfa', '#f472b6', '#34d399', '#fbbf24', '#60a5fa', '#f87171', '#818cf8', '#fb923c']
+const COLORS = ['#6E473B', '#A78D78', '#5A7A3A', '#9B4A3A', '#D4A76A', '#BEB5A9', '#8a6052', '#C4624A']
 
 export default function Dashboard() {
   const { transactions, wallets, settings } = useStore()
@@ -75,27 +75,27 @@ export default function Dashboard() {
         <Button variant="ghost" size="icon" onClick={() => setPeriod(p => getPrevPeriod(p, settings.monthStartDay))}>
           <ChevronLeft className="h-5 w-5" />
         </Button>
-        <h2 className="text-lg font-semibold text-purple-800 capitalize">{period.label}</h2>
+        <h2 className="text-lg font-semibold text-brown-950 dark:text-brown-100 capitalize">{period.label}</h2>
         <Button variant="ghost" size="icon" onClick={() => setPeriod(p => getNextPeriod(p, settings.monthStartDay))}>
           <ChevronRight className="h-5 w-5" />
         </Button>
       </div>
 
       {/* Cat mascot + total balance */}
-      <Card className="bg-gradient-to-br from-purple-500 to-pink-500 text-white border-none overflow-hidden relative">
+      <Card className="bg-linear-to-br from-brown-700 to-brown-950 text-white border-none overflow-hidden relative">
         <CardContent className="p-5">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-purple-100 text-sm mb-1">Total Saldo 🐱</p>
+              <p className="text-brown-200 text-sm mb-1">Total Saldo 🐱</p>
               <p className="text-3xl font-bold">{formatCurrency(totalBalance)}</p>
               <div className="flex gap-3 mt-3">
                 <div className="flex items-center gap-1">
-                  <ArrowUpRight className="h-4 w-4 text-green-200" />
-                  <span className="text-sm text-purple-100">{formatCurrency(totalIncome)}</span>
+                  <ArrowUpRight className="h-4 w-4 text-green-300" />
+                  <span className="text-sm text-brown-200">{formatCurrency(totalIncome)}</span>
                 </div>
                 <div className="flex items-center gap-1">
-                  <ArrowDownRight className="h-4 w-4 text-red-200" />
-                  <span className="text-sm text-purple-100">{formatCurrency(totalExpense)}</span>
+                  <ArrowDownRight className="h-4 w-4 text-red-300" />
+                  <span className="text-sm text-brown-200">{formatCurrency(totalExpense)}</span>
                 </div>
               </div>
             </div>
@@ -132,20 +132,20 @@ export default function Dashboard() {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Wallet className="h-5 w-5 text-purple-500" />
+            <Wallet className="h-5 w-5 text-brown-400" />
             Dompet
           </CardTitle>
         </CardHeader>
         <CardContent>
           {wallets.length === 0 ? (
-            <p className="text-sm text-purple-300">Belum ada dompet</p>
+            <p className="text-sm text-brown-300">Belum ada dompet</p>
           ) : (
             <div className="space-y-2">
               {wallets.map(w => (
-                <div key={w.id} className="flex items-center justify-between p-2 rounded-lg bg-purple-50/50">
+                <div key={w.id} className="flex items-center justify-between p-2 rounded-lg bg-brown-50/60 dark:bg-brown-950/40">
                   <div className="flex items-center gap-2">
-                    <div className="w-3 h-3 rounded-full" style={{ backgroundColor: w.color || '#a78bfa' }} />
-                    <span className="text-sm font-medium text-purple-800">{w.name}</span>
+                    <div className="w-3 h-3 rounded-full" style={{ backgroundColor: w.color || '#6E473B' }} />
+                    <span className="text-sm font-medium text-brown-950 dark:text-brown-100">{w.name}</span>
                     <Badge variant="outline">{w.type}</Badge>
                   </div>
                   <span className={`text-sm font-semibold ${w.balance >= 0 ? 'text-green-600' : 'text-red-600'}`}>
@@ -177,12 +177,12 @@ export default function Dashboard() {
                     <stop offset="95%" stopColor="#f87171" stopOpacity={0} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="#f3e8ff" />
-                <XAxis dataKey="date" tickFormatter={(v) => v.split('-')[2]} tick={{ fontSize: 11 }} stroke="#c4b5fd" />
-                <YAxis tickFormatter={(v) => `${(v / 1000).toFixed(0)}k`} tick={{ fontSize: 11 }} stroke="#c4b5fd" />
+                <CartesianGrid strokeDasharray="3 3" stroke="#D4C8BC" />
+                <XAxis dataKey="date" tickFormatter={(v) => v.split('-')[2]} tick={{ fontSize: 11 }} stroke="#BEB5A9" />
+                <YAxis tickFormatter={(v) => `${(v / 1000).toFixed(0)}k`} tick={{ fontSize: 11 }} stroke="#BEB5A9" />
                 <Tooltip
                   formatter={(value) => formatCurrency(Number(value))}
-                  contentStyle={{ borderRadius: 12, border: '1px solid #e9d5ff', fontSize: 12 }}
+                  contentStyle={{ borderRadius: 12, border: '1px solid #D4C8BC', fontSize: 12 }}
                 />
                 <Area type="monotone" dataKey="income" stroke="#34d399" fill="url(#incomeGrad)" strokeWidth={2} />
                 <Area type="monotone" dataKey="expense" stroke="#f87171" fill="url(#expenseGrad)" strokeWidth={2} />
@@ -223,9 +223,9 @@ export default function Dashboard() {
                   <div key={item.name} className="flex items-center justify-between text-xs">
                     <div className="flex items-center gap-1.5">
                       <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: COLORS[i % COLORS.length] }} />
-                      <span className="text-purple-700">{item.name}</span>
+                      <span className="text-brown-700 dark:text-brown-300">{item.name}</span>
                     </div>
-                    <span className="text-purple-500 font-medium">{formatCurrency(item.value)}</span>
+                    <span className="text-brown-500 dark:text-brown-400 font-medium">{formatCurrency(item.value)}</span>
                   </div>
                 ))}
               </div>
@@ -243,9 +243,9 @@ export default function Dashboard() {
           <CardContent>
             <ResponsiveContainer width="100%" height={150}>
               <BarChart data={walletData} layout="vertical">
-                <CartesianGrid strokeDasharray="3 3" stroke="#f3e8ff" />
-                <XAxis type="number" tickFormatter={(v) => `${(v / 1000).toFixed(0)}k`} tick={{ fontSize: 11 }} stroke="#c4b5fd" />
-                <YAxis type="category" dataKey="name" tick={{ fontSize: 11 }} stroke="#c4b5fd" width={60} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#D4C8BC" />
+                <XAxis type="number" tickFormatter={(v) => `${(v / 1000).toFixed(0)}k`} tick={{ fontSize: 11 }} stroke="#BEB5A9" />
+                <YAxis type="category" dataKey="name" tick={{ fontSize: 11 }} stroke="#BEB5A9" width={60} />
                 <Tooltip formatter={(value) => formatCurrency(Number(value))} />
                 <Bar dataKey="balance" radius={[0, 8, 8, 0]}>
                   {walletData.map((entry, index) => (
@@ -266,13 +266,13 @@ export default function Dashboard() {
         <CardContent>
           {recentTransactions.length === 0 ? (
             <div className="text-center py-6">
-              <CatSleep size={48} className="mx-auto text-purple-300 mb-2" />
-              <p className="text-sm text-purple-400">Belum ada transaksi bulan ini</p>
+              <CatSleep size={48} className="mx-auto text-brown-300 mb-2" />
+              <p className="text-sm text-brown-400">Belum ada transaksi bulan ini</p>
             </div>
           ) : (
             <div className="space-y-2">
               {recentTransactions.map(tx => (
-                <div key={tx.id} className="flex items-center justify-between p-2.5 rounded-xl bg-purple-50/50">
+                <div key={tx.id} className="flex items-center justify-between p-2.5 rounded-xl bg-brown-50/60 dark:bg-brown-950/40">
                   <div className="flex items-center gap-3">
                     <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm ${
                       tx.type === 'income' ? 'bg-green-100' : 'bg-red-100'
@@ -280,8 +280,8 @@ export default function Dashboard() {
                       {tx.type === 'income' ? '↗' : '↘'}
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-purple-900">{tx.name}</p>
-                      <p className="text-xs text-purple-400">{formatDate(tx.date)} · {tx.category}</p>
+                      <p className="text-sm font-medium text-brown-950 dark:text-brown-100">{tx.name}</p>
+                      <p className="text-xs text-brown-400">{formatDate(tx.date)} · {tx.category}</p>
                     </div>
                   </div>
                   <span className={`text-sm font-semibold ${

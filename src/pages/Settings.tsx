@@ -4,6 +4,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Select } from '@/components/ui/select'
+import { toast } from '@/components/ui/toast'
 import { CatWave, CatHappy } from '@/components/cat-icons'
 import {
   Settings as SettingsIcon, Calendar, Key, Palette, Info, Cat
@@ -18,7 +19,7 @@ export default function Settings() {
 
   const handleSaveApiKey = () => {
     updateSettings({ groqApiKey: apiKey })
-    alert('API Key disimpan! 🐱')
+    toast.success('API Key disimpan! 🐱')
   }
 
   const handleAddCategory = () => {
@@ -29,8 +30,8 @@ export default function Settings() {
 
   return (
     <div className="space-y-4 pb-20">
-      <h2 className="text-lg font-semibold text-purple-800 flex items-center gap-2">
-        <SettingsIcon className="h-5 w-5 text-purple-500" />
+      <h2 className="text-lg font-semibold text-brown-950 dark:text-brown-100 flex items-center gap-2">
+        <SettingsIcon className="h-5 w-5 text-brown-400" />
         Pengaturan
       </h2>
 
@@ -38,12 +39,12 @@ export default function Settings() {
       <Card>
         <CardHeader>
           <CardTitle className="text-sm flex items-center gap-2">
-            <Calendar className="h-4 w-4 text-purple-500" />
+            <Calendar className="h-4 w-4 text-brown-400" />
             Awal Bulan
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-xs text-purple-400 mb-2">
+          <p className="text-xs text-brown-400 mb-2">
             Pilih tanggal mulai periode bulanan (misal tanggal gajian)
           </p>
           <Select
@@ -61,15 +62,15 @@ export default function Settings() {
       <Card>
         <CardHeader>
           <CardTitle className="text-sm flex items-center gap-2">
-            <Key className="h-4 w-4 text-purple-500" />
+            <Key className="h-4 w-4 text-brown-400" />
             Groq AI Integration
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-xs text-purple-400 mb-2">
+          <p className="text-xs text-brown-400 mb-2">
             Masukkan API key Groq untuk menggunakan fitur input transaksi via AI.
             Dapatkan key di{' '}
-            <a href="https://console.groq.com" target="_blank" rel="noopener noreferrer" className="text-purple-600 underline">
+            <a href="https://console.groq.com" target="_blank" rel="noopener noreferrer" className="text-brown-700 underline">
               console.groq.com
             </a>
           </p>
@@ -97,17 +98,17 @@ export default function Settings() {
       <Card>
         <CardHeader>
           <CardTitle className="text-sm flex items-center gap-2">
-            <Info className="h-4 w-4 text-purple-500" />
+            <Info className="h-4 w-4 text-brown-400" />
             Auto Backup
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex items-center justify-between">
-            <p className="text-sm text-purple-700">Backup otomatis harian</p>
+            <p className="text-sm text-brown-700 dark:text-brown-300">Backup otomatis harian</p>
             <button
               onClick={() => updateSettings({ autoBackup: !settings.autoBackup })}
               className={`relative w-12 h-6 rounded-full transition-colors ${
-                settings.autoBackup ? 'bg-purple-500' : 'bg-purple-200'
+                settings.autoBackup ? 'bg-brown-700' : 'bg-brown-200'
               }`}
             >
               <div className={`absolute top-0.5 w-5 h-5 rounded-full bg-white shadow-sm transition-transform ${
@@ -122,7 +123,7 @@ export default function Settings() {
       <Card>
         <CardHeader>
           <CardTitle className="text-sm flex items-center gap-2">
-            <Cat className="h-4 w-4 text-purple-500" />
+            <Cat className="h-4 w-4 text-brown-400" />
             Kategori
           </CardTitle>
         </CardHeader>
@@ -153,7 +154,7 @@ export default function Settings() {
               <p className="text-xs font-medium text-green-600 mt-2">💰 Pemasukan</p>
               {categories.filter(c => c.type === 'income').map(cat => (
                 <div key={cat.id} className="flex items-center justify-between text-sm p-2 rounded-lg bg-green-50/50">
-                  <span className="text-purple-800">{cat.icon} {cat.name}</span>
+                  <span className="text-brown-950 dark:text-brown-100">{cat.icon} {cat.name}</span>
                   <button onClick={() => deleteCategory(cat.id)} className="text-red-400 hover:text-red-600 text-xs">✕</button>
                 </div>
               ))}
@@ -161,7 +162,7 @@ export default function Settings() {
               <p className="text-xs font-medium text-red-600 mt-3">💸 Pengeluaran</p>
               {categories.filter(c => c.type === 'expense').map(cat => (
                 <div key={cat.id} className="flex items-center justify-between text-sm p-2 rounded-lg bg-red-50/50">
-                  <span className="text-purple-800">{cat.icon} {cat.name}</span>
+                  <span className="text-brown-950 dark:text-brown-100">{cat.icon} {cat.name}</span>
                   <button onClick={() => deleteCategory(cat.id)} className="text-red-400 hover:text-red-600 text-xs">✕</button>
                 </div>
               ))}
@@ -173,10 +174,10 @@ export default function Settings() {
       {/* About */}
       <Card>
         <CardContent className="p-4 text-center">
-          <CatWave size={80} className="mx-auto text-purple-400 mb-3" />
-          <p className="text-lg font-bold text-purple-800">FinFlow 🐱</p>
-          <p className="text-xs text-purple-400 mt-1">Keuangan pribadimu, lebih mudah & menyenangkan</p>
-          <p className="text-xs text-purple-300 mt-2">v1.0.0 • Made with 💜</p>
+          <CatWave size={80} className="mx-auto text-brown-400 mb-3" />
+          <p className="text-lg font-bold text-brown-950 dark:text-brown-100">PawFolio 🐾</p>
+          <p className="text-xs text-brown-400 mt-1">Keuangan pribadimu, lebih mudah & menyenangkan</p>
+          <p className="text-xs text-brown-300 mt-2">v1.0.0 • Made with ♥️</p>
         </CardContent>
       </Card>
     </div>

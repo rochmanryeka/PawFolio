@@ -13,6 +13,8 @@ dist-ssr
 *.local
 
 .env
+.env.signing
+android-signing/
 
 # Editor directories and files
 .vscode/*
